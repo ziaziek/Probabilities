@@ -1,0 +1,41 @@
+
+Po wykonaniu szeregu doświadczeń z użyciem SeriesSimulator, otrzymujemy bardzo ciekawe wnioski:
+Dla prawdopodobienstwa p=0.5 - ciag dlugosci 130 daje 98% szanse zrownowazenia, czyli pozytywne ciagi stanowia 99% 98+(100-98)/2, a co ważniejsze i ciekawsze
+ta dlugosc ciagu wystarcza tez dla wszystkich p.
+
+Twierdzenie:
+Wszysztkie ciagi zdarzeń 0-1 o długości 130 są w 98% zrównoważone.
+
+Skoro tak, to istnieje możliwość określenia najdłuższego ciągu niepowodzeń (z pewnością 98%).
+Jeśli bowiem ciąg o p=0.5 i długości 130 jest zrównoważony, to ma 65 (130/2) niepowodzeń i 65 sukcesów.
+Zatem, w skrajnym przypadku, najdłuższy ciąg niepowodzeń ma długość 65 dla p=0.5.
+
+Uogólniając,
+Najdłuższy ciąg niepowodzeń wyraża się wzorem: cp=130*(1-p).
+
+Zadanie:
+Zbadać, ile wynosi średni oraz najdłuższy ciąg niepowodzeń dla różnych p oraz jak często najdłuższy ciąg pojawia się w symulacjach.
+
+Podczas symulacji okazuje się, że najdłuższym ciągiem strat dla p=0.5 okazuje się być 28 (1000 ciągów po 130 zdarzeń, 10000 symulacji). Wg teorii miałby 65.
+Przy podobnych założeniach dla p=0.33, najdłuższy z ciągów niepowodzeń miał 48 elementów. Wg teorii miałby 87.
+I tak dla p=0.25, najdłuższy ciąg niepoeodzeń = 63. Teoretyczny 97.
+
+Średnie długości ciągów niepowodzeń odpowiadają ciągom teoretycznym doskonale zrównoważonym (ciąg, którego długość to minimalna liczba zdarzeń, aby sukcesy i porażki występowały w ilości
+teoretycznej.) I tak, dla p=0.5, średni ciąg niepowodzeń = 1 (0,1)
+Dla p=0.25, ta długość to 3 (0,0,0,1).
+
+Zadanie: (symulacja obstawiania płaskiego (niezmienna stawka) z niekorzystnym kursem).
+Wykonaj symulację obstawiania zakładu o prawdopodobieństwie p i wygranej k (k to zwrot z zakładu) dla danego początkowego stanu konta C.
+Współczynnik k powinien być tak ustawiony, aby był niekorzystny dla gracza, tj. k<1/p.
+
+Dla płaskiego symulatora - ze stałą stawką - wynik jest taki, jak można przypuszczać: zakłady o niekorzystnym k zawsze kończą się bankructwem,
+zakłady o zrównoważonym k są remisowe, przy dłuższych seriach, natomiast zakłady o k>1/p, dają zysk.
+
+
+Należy teraz zbadać, czy będąc wyposażonym w taką wiedzę o ciągach zrównoważonych, jesteśmy w stanie opracować model zachowań lub równanie,
+które pozwoli na dostosowywanie stawki zakładu do poziomu, który wyrówna powstałe straty i pozwoli jeszcze nam zarobić.
+Wysokość stawki zależna będzie od historii ciągu zrównoważonego, bo na tej podstawie będziemy mogli ocenić szansę na sukces w kolejnym zdarzeniu,
+jeśli taka ocena jest możliwa.
+
+W celu uzyskania powyższego należy skonstruować taki symulator, który ustalać będzie stawkę na podstawieilości dotychczasowych szeregów zrównoważonych,
+ilości niepowodzeń oraz sukcesów. Będzie to praca empiryczna, na podstawie której ustalimy współczynniki i progi funkcji wyznaczającej wielkość stawki.
