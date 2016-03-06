@@ -7,6 +7,7 @@ package com.przemo.probabilities;
 
 import com.przemo.probabilities.gui.MainForm;
 import com.przemo.probabilities.series.simulation.BalancedAdaptiveBettingSimulator;
+import com.przemo.probabilities.series.simulation.HalfAccountStrategy;
 import com.przemo.probabilities.series.simulation.SeriesSimulator;
 import javax.swing.SwingUtilities;
 
@@ -24,6 +25,7 @@ public class Application {
     private static void textMode(){
         BalancedAdaptiveBettingSimulator sim = new BalancedAdaptiveBettingSimulator(1000, 2.0);
         sim.setVerbose(true);
+        sim.setBettingStrategy(new HalfAccountStrategy(sim));
         sim.run(0.5);
     }
     

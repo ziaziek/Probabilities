@@ -13,16 +13,21 @@ public class BalancedAdaptiveBettingSimulator extends AdaptiveBettingSimulator {
 
     protected BooleanSeries window;
     private final int windowLength;
-    private int stakes[];
+    private double stakes[];
     private double D1 = 0.0; //previous D
     private int sindex = 0; //current index of the stakes
     protected double tolerance = 1.1;
     private final int m = 4; //window length multiplier
+    protected IBettingStrategy bettingStrategy;
 
     public BalancedAdaptiveBettingSimulator(int seriesLength, double k) {
         super(seriesLength, k);
         windowLength = (int) (m * k + 1);
         window = new BooleanSeries(windowLength);
+    }
+    
+    public void setBettingStrategy(IBettingStrategy bettingStrategy) {
+        this.bettingStrategy = bettingStrategy;
     }
 
     //specific method of bet assesement for this particular class. Based on balanced series theory
@@ -37,16 +42,21 @@ public class BalancedAdaptiveBettingSimulator extends AdaptiveBettingSimulator {
         //get me all events that I will use for chances assesement
         window.setEvents(getSeries().get(0).getEvents().subList(Math.max(0, runIteraion - windowLength), runIteraion));
             //take special steps now. Decide whether to decrease, increase or default the stake
-            findStakesIndex(p);
-            return getStakesArray(p)[sindex];
+            double[] stakesArray = getStakesArray(p);
+            findStakesIndex(p, stakesArray);
+            if(bettingStrategy!=null){
+                return stakesArray[bettingStrategy.modifyStakesIndex(sindex, stakesArray)];
+            } else {
+                return stakesArray[sindex];
+            }
 
     }
 
-    protected void findStakesIndex(double p) {
+    protected void findStakesIndex(double p, final double[] stakes) {
         double D = p / window.getNumberOfSuccess() * window.getEvents().size();
         if (D > tolerance) {
             if (D >= D1) {
-                sindex = Math.min(sindex + 1, getStakesArray(p).length-1);
+                sindex = Math.min(sindex + 1, stakes.length-1);
             } else if (D < D1) {
                 sindex = Math.max(0, sindex - 1);
             }
@@ -62,11 +72,11 @@ public class BalancedAdaptiveBettingSimulator extends AdaptiveBettingSimulator {
         D1 = D;
     }
 
-    protected int[] getStakesArray(double p) {
+    protected double[] getStakesArray(double p) {
 
         if (stakes == null || stakes.length == 0) {
             int stakesLength = (int) (m / (p * p));
-            stakes = new int[stakesLength];
+            stakes = new double[stakesLength];
             int i;
             for (i = 0; i < 1 / p; i++) {
                 stakes[i] = 1;
@@ -90,7 +100,7 @@ public class BalancedAdaptiveBettingSimulator extends AdaptiveBettingSimulator {
 
     @Override
     protected void adjustBet() {
-        bet = bet; //don't adjust the bet as it's done in a super class SimpleProgressiveBettingSimulator
+            //don't adjust the bet as it's done in a super class SimpleProgressiveBettingSimulator
     }
 
     

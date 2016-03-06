@@ -98,6 +98,7 @@ public class BettingSeriesSimulator extends SeriesSimulator {
     public void doRunAction(Random r, double p, PSeries<Boolean> ps) {
         bet = assessBet(p);
         if(isVerbose()){
+            System.out.println("Iteration: "+runIteraion);
             System.out.println("Before betting:");
             System.out.println("Account: "+account);
             System.out.println("Assesed bet: "+bet);
